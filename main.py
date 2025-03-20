@@ -5,20 +5,26 @@ import seaborn as sns
 
 st.title("Heart Disease Data Analysis")
 
-# Default dataset
+# Default dataset (GitHub raw link)
 DEFAULT_DATASET = "https://raw.githubusercontent.com/Tanish3967/Project---Heart-Disease-Analysis/main/heart.csv"
 
 def load_data(file=None):
-    if file is not None:
-        df = pd.read_csv(file)
-    else:
-        df = pd.read_csv(DEFAULT_DATASET)
-    return df
+    try:
+        if file is not None:
+            df = pd.read_csv(file)
+        else:
+            df = pd.read_csv(DEFAULT_DATASET)
+
+        df.dropna(inplace=True)  # Remove missing values
+        return df
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        return pd.DataFrame()
 
 # File Upload
 uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
-
 df = load_data(uploaded_file)
+
 st.write("### Data Preview")
 st.dataframe(df.head(5))
 
@@ -73,6 +79,11 @@ st.pyplot(fig)
 
 # Correlation Heatmap
 st.write("### Correlation Heatmap")
-fig, ax = plt.subplots(figsize=(10,6))
-sns.heatmap(df.corr(), annot=True, cmap="coolwarm", ax=ax)
-st.pyplot(fig)
+numeric_df = df.select_dtypes(include=["number"])  # Select only numeric columns
+
+if not numeric_df.empty:
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(numeric_df.corr(), annot=True, cmap="coolwarm", ax=ax)
+    st.pyplot(fig)
+else:
+    st.error("No numeric columns available for correlation heatmap.")
