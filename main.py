@@ -6,7 +6,7 @@ import seaborn as sns
 st.title("Heart Disease Data Analysis")
 
 # Default dataset
-DEFAULT_DATASET = "https://github.com/Tanish3967/Project---Heart-Disease-Analysis/blob/main/heart.csv"
+DEFAULT_DATASET = "https://raw.githubusercontent.com/Tanish3967/Project---Heart-Disease-Analysis/main/heart.csv"
 
 def load_data(file=None):
     if file is not None:
